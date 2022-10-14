@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { PostData } from '../interfaces'
 import PostsList from '../components/PostsList';
 import './posts.css';
 
-export interface PostData {
-    userId: number;
-    id: number;
-    title: string;
-    body: string;
-}
 
 const Posts: React.FC = () => {
     const [allPosts, setAllPosts] = useState<PostData[] | null>(null);
@@ -24,14 +19,18 @@ const Posts: React.FC = () => {
         getPosts();
     }, [numberOfPosts]);
 
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNumberOfPosts(+e.target.value);
+    }
+
 
     return (
         <div className="post-container">
             <h1>Page principale</h1>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label htmlFor="posts">Nombre de publication 5</label>
-                <input type="range" min={1} max={20} onChange={(e) => console.log(e.target.value)} />
-                <PostsList />
+                <label htmlFor="posts">Nombre de publication {numberOfPosts}</label>
+                <input type="range" min={1} max={20} onChange={onChange} />
+                <PostsList allPosts={allPosts} />
             </div>
         </div>
     );

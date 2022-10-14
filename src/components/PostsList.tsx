@@ -1,10 +1,19 @@
 import React from 'react';
-
-const PostsList = () => {
+import { PostData } from '../interfaces';
+import './postsList.css';
+interface PostsListProps {
+    allPosts: PostData[] | null;
+}
+const PostsList: React.FC<PostsListProps> = ({ allPosts }) => {
     return (
         <div>
-            <ul className="Posts">
-
+            <ul className="posts">
+                {allPosts?.map(post => (
+                    <li key={post.id}>
+                        <h2>{post.title}</h2>
+                        <p>Lire l'article</p>
+                    </li>
+                ))}
             </ul>
         </div>
     );
