@@ -3,24 +3,25 @@ import { PostData } from '../interfaces'
 import PostsList from '../components/PostsList';
 import './posts.css';
 
-
 const Posts: React.FC = () => {
     const [allPosts, setAllPosts] = useState<PostData[] | null>(null);
     const [numberOfPosts, setNumberOfPosts] = useState<number>(5);
 
-    console.log(allPosts);
+    const localOrStateNumber = () => localStorage.getItem('number') || numberOfPosts;
+    const localOrStateNum = localOrStateNumber();
 
     useEffect(() => {
         const getPosts = async () => {
-            const response = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${numberOfPosts}`);
+            const response = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${localOrStateNum}`);
             const data: PostData[] = await response.json();
             setAllPosts(data);
         }
         getPosts();
-    }, [numberOfPosts]);
+    }, [localOrStateNum]);
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNumberOfPosts(+e.target.value);
+        localStorage.setItem('number', e.target.value);
     }
 
 
@@ -28,8 +29,8 @@ const Posts: React.FC = () => {
         <div className="post-container">
             <h1>Page principale</h1>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label htmlFor="posts">Nombre de publication {numberOfPosts}</label>
-                <input type="range" min={1} max={20} onChange={onChange} />
+                <label htmlFor="posts">Nombre de publication {localOrStateNum}</label>
+                <input type="range" min={1} max={20} onChange={onChange} defaultValue={localOrStateNum} />
                 <PostsList allPosts={allPosts} />
             </div>
         </div>
